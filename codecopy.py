@@ -18,7 +18,7 @@ designtimeFolderName = 'sap.smbaas.ui.designtime'
 srcBranch = str(sys.argv[1])
 targetBranch = str(sys.argv[2])
 userid = str(sys.argv[3])
-if len(sys.argv) >= 4:
+if len(sys.argv) > 4:
     project = str(sys.argv[4])
 else :
     project = ""
@@ -33,18 +33,27 @@ PROJECTS['runtime'] = '/fnf/Do/sap.smbaas.ui.runtime.git'
 PROJECTS['javacore'] = '/sap.smartbusiness.service.core.git'
 PROJECTS['javaclassic'] = '/sap.smartbusiness.service.hcp.classic.git'
 PROJECTS['javacf'] = '/sap.smartbusiness.service.cf'
+PROJECTS['contentstorecore'] = '/sap.smartbusiness.content.store.core.git'
+PROJECTS['contentstoreclassic'] = '/sap.smartbusiness.content.store.hcp.classic.git'
+PROJECTS['contentstorecf'] = '/sap.smartbusiness.content.store.hcp.cf.git'
 
 PROJECT_FOLDER_NAMES['designtime'] = 'sap.smbaas.ui.designtime'
 PROJECT_FOLDER_NAMES['runtime'] = 'sap.smbaas.ui.runtime'
 PROJECT_FOLDER_NAMES['javacore'] = 'sap.smartbusiness.service.core'
 PROJECT_FOLDER_NAMES['javaclassic'] = 'sap.smartbusiness.service.hcp.classic'
 PROJECT_FOLDER_NAMES['javacf'] = 'sap.smartbusiness.service.cf'
+PROJECT_FOLDER_NAMES['contentstorecore'] = 'sap.smartbusiness.content.store.core'
+PROJECT_FOLDER_NAMES['contentstoreclassic'] = 'sap.smartbusiness.content.store.hcp.classic'
+PROJECT_FOLDER_NAMES['contentstorecf'] = 'sap.smartbusiness.content.store.hcp.cf'
 
 FOLDER_TO_COPY['designtime'] = "\\src\\main\\webapp"
 FOLDER_TO_COPY['runtime'] = "\\webapp"
 FOLDER_TO_COPY['javacore'] = "\\sap-smartbusiness-service-core\\src\\main"
 FOLDER_TO_COPY['javaclassic'] = "\\sap-smartbusiness-service-hcp-classic\\src\\main"
 FOLDER_TO_COPY['javacf'] = "\\java\\src\\main"
+FOLDER_TO_COPY['contentstorecore'] = "\\sap-smartbusiness-content-store-core\\src\\main"
+FOLDER_TO_COPY['contentstoreclassic'] = "\\sap-smartbusiness-content-store-hcp-classic\\src\\main"
+FOLDER_TO_COPY['contentstorecf'] = "\\src\\main"
 
 def run_command(command):
     print("Executing command : %s" % (command))
@@ -104,11 +113,11 @@ for key, value in PROJECTS.items():
 
 
     #committing the changes and pushing the changes to gerrit
-    # os.chdir(targetBranch+"\\"+PROJECT_FOLDER_NAMES[key])
-    # run_command("git add .")
-    # run_command("git commit -m 'CodeCopy'")
-    # pushcommand = "git push ssh://"+userid+"@"+hostName+":"+port+PROJECTS[key] + " HEAD:refs/for/"+targetBranch+"%"+formReviewerString()
-    # run_command(pushcommand)
+    os.chdir(targetBranch+"\\"+PROJECT_FOLDER_NAMES[key])
+    run_command("git add .")
+    run_command("git commit -m 'CodeCopy'")
+    pushcommand = "git push ssh://"+userid+"@"+hostName+":"+port+PROJECTS[key] + " HEAD:refs/for/"+targetBranch+"%"+formReviewerString()
+    run_command(pushcommand)
 
     os.chdir(dir_path+"\\"+tempFolderName)
 
