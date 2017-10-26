@@ -68,7 +68,7 @@ def formReviewerString():
     return result
 
 #Read json file containing projects information
-with open('MilestoneProjects.json','r') as f:
+with open('Projects.json','r') as f:
     projects = json.load(f)
 
 #creating a separate directory.
