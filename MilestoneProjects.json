@@ -1,0 +1,44 @@
+[
+    {
+        "name": "designtime",
+        "git": "/fnf/Do/sap.smbaas.ui.designtime.git",
+        "projectfolder": "sap.smbaas.ui.designtime"
+    },
+    {
+        "name": "runtime",
+        "git": "/fnf/Do/sap.smbaas.ui.runtime.git",
+        "projectfolder": "sap.smbaas.ui.runtime"
+    },
+    {
+        "name": "javacore",
+        "git": "/sap.smartbusiness.service.core.git",
+        "projectfolder": "sap.smartbusiness.service.core",
+        "parentfolder": "sap-smartbusiness-service-core-parent",
+        "subprojects": [
+            {
+                "folder": "sap-smartbusiness-service-core"
+            }
+        ],
+        "hasparent": "True"
+    },
+    {
+        "name": "javaclassic",
+        "git": "/sap.smartbusiness.service.hcp.classic.git",
+        "projectfolder": "sap.smartbusiness.service.hcp.classic",
+        "parentfolder": "sap-smartbusiness-service-hcp-classic-parent",
+        "subprojects": [
+            {
+                "folder": "sap-smartbusiness-service-hcp-classic"
+            },
+            {
+                "folder": "sap-smartbusiness-service-hcp-classic-deployment"
+            }
+        ],
+        "hasparent": "True"
+    },
+    {
+        "name": "javacf",
+        "git": "/sap.smartbusiness.service.cf",
+        "projectfolder": "sap.smartbusiness.service.cf"
+    }
+]
