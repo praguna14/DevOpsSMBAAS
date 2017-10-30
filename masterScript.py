@@ -12,6 +12,9 @@ import sys
 #file imports
 import milestoneRemoveSnapshot
 import milestoneMasterAddSnapshotAndIncrement
+import milestoneRelAddSnapshotAndIncrement
+import patchRelRemoveSnapshotAndIncrement
+import patchRelAddSnapshot
 
 USERID = sys.argv[1]
 CODE = sys.argv[2]
@@ -24,12 +27,24 @@ elif CODE == '2':
     milestoneMasterAddSnapshotAndIncrement.main(USERID)
 elif CODE == '3':
     # X.XX.X to X.XX+1.X-SNAPSHOT rel
-    print(CODE)
+    if len(sys.argv) <4:
+        print("*****FAILURE*****/nScript parameters does not contain rel branch")
+    else:
+        RELBRANCH = sys.argv[3]
+        milestoneRelAddSnapshotAndIncrement.main(USERID,RELBRANCH)
 elif CODE == '4':
     # X.XX.X-SNAPSHOT to X.XX.X+1 rel
-    print(CODE)
+    if len(sys.argv) <4:
+        print("*****FAILURE*****/nScript parameters does not contain rel branch")
+    else:
+        RELBRANCH = sys.argv[3]
+        patchRelRemoveSnapshotAndIncrement.main(USERID,RELBRANCH)
 elif CODE == '5':
     # X.XX.X+1 to X.XX.X+1-SNAPSHOT rel
-    print(CODE)
+    if len(sys.argv) <4:
+        print("*****FAILURE*****/nScript parameters does not contain rel branch")
+    else:
+        RELBRANCH = sys.argv[3]
+        patchRelAddSnapshot.main(USERID,RELBRANCH)
 else:
     print("Incorrect CODE")

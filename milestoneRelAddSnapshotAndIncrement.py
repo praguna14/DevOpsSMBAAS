@@ -1,5 +1,5 @@
 """ Script to do milestone release.
-    Usage: python milestoneMasterAddSnapshotAndIncrement.py <user-id>"""
+    Usage: python milestoneRelAddSnapshotAndIncrement.py <user-id> <RelBranch>"""
 
 import subprocess
 import os
@@ -47,6 +47,7 @@ def change_nonparent_pom(filename):
         VERSION.text = '.'.join(temp)
     else:
         return -1
+    VERSION.text = VERSION.text + "-SNAPSHOT"
     TREE.write('pom.xml')
     return 1
 
@@ -65,7 +66,7 @@ def formReviewerString():
             result = result + ",r=" + reviewer
     return result
 
-def main(USERID):
+def main(USERID, RELBRANCH):
     #Read json file containing projects information
     with open('Projects.json','r') as f:
         projects = json.load(f)
@@ -77,7 +78,7 @@ def main(USERID):
     #MAIN
     for project in projects:
         #cloning master branch
-        CLONECOMMAND = "git clone -b master ssh://"+USERID+"@git.wdf.sap.corp:29418"+project["git"]
+        CLONECOMMAND = "git clone -b"+ RELBRANCH + "ssh://"+USERID+"@git.wdf.sap.corp:29418"+project["git"]
         run_command(CLONECOMMAND)
         os.chdir(project["projectfolder"])
 
@@ -103,10 +104,11 @@ def main(USERID):
         #pushing the change to gerrit
         run_command("git add .")
         run_command("git commit -m 'MilestoneRelease "+project['name']+"'")
-        pushcommand = "git push ssh://"+USERID+"@"+HONENAME+":"+PORT+project["git"] + " HEAD:refs/for/master%"+formReviewerString()
+        pushcommand = "git push ssh://"+USERID+"@"+HONENAME+":"+PORT+project["git"] + " HEAD:refs/for/"+ RELBRANCH + "%"+formReviewerString()
         # run_command(pushcommand)
         os.chdir(DIR_PATH + "\\" + TEMP_FOLDER_NAME)
 
 if __name__ == '__main__':
     USERID = sys.argv[1]
-    main(USERID)
+    RELBRANCH = sys.argv[2]
+    main(USERID,RELBRANCH)
