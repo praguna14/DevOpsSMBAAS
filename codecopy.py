@@ -28,14 +28,15 @@ reviewers=['prem.roshan.madhusudhan.nair@sap.com','ananya.mallik@sap.com','giris
 PROJECTS = {}
 PROJECT_FOLDER_NAMES = {}
 FOLDER_TO_COPY = {}
-PROJECTS['designtime'] = '/fnf/Do/sap.smbaas.ui.designtime.git'
-PROJECTS['runtime'] = '/fnf/Do/sap.smbaas.ui.runtime.git'
-PROJECTS['javacore'] = '/sap.smartbusiness.service.core.git'
-PROJECTS['javaclassic'] = '/sap.smartbusiness.service.hcp.classic.git'
-PROJECTS['javacf'] = '/sap.smartbusiness.service.cf'
-PROJECTS['contentstorecore'] = '/sap.smartbusiness.content.store.core.git'
-PROJECTS['contentstoreclassic'] = '/sap.smartbusiness.content.store.hcp.classic.git'
-PROJECTS['contentstorecf'] = '/sap.smartbusiness.content.store.hcp.cf.git'
+# PROJECTS['designtime'] = '/fnf/Do/sap.smbaas.ui.designtime.git'
+# PROJECTS['runtime'] = '/fnf/Do/sap.smbaas.ui.runtime.git'
+# PROJECTS['javacore'] = '/sap.smartbusiness.service.core.git'
+# PROJECTS['javaclassic'] = '/sap.smartbusiness.service.hcp.classic.git'
+# PROJECTS['javacf'] = '/sap.smartbusiness.service.cf'
+# PROJECTS['contentstorecore'] = '/sap.smartbusiness.content.store.core.git'
+# PROJECTS['contentstoreclassic'] = '/sap.smartbusiness.content.store.hcp.classic.git'
+# PROJECTS['contentstorecf'] = '/sap.smartbusiness.content.store.hcp.cf.git'
+PROJECTS['contentstoreui'] = '/fnf/Do/sap.smbaas.ui.ssbcontentstore'
 
 PROJECT_FOLDER_NAMES['designtime'] = 'sap.smbaas.ui.designtime'
 PROJECT_FOLDER_NAMES['runtime'] = 'sap.smbaas.ui.runtime'
@@ -45,6 +46,7 @@ PROJECT_FOLDER_NAMES['javacf'] = 'sap.smartbusiness.service.cf'
 PROJECT_FOLDER_NAMES['contentstorecore'] = 'sap.smartbusiness.content.store.core'
 PROJECT_FOLDER_NAMES['contentstoreclassic'] = 'sap.smartbusiness.content.store.hcp.classic'
 PROJECT_FOLDER_NAMES['contentstorecf'] = 'sap.smartbusiness.content.store.hcp.cf'
+PROJECT_FOLDER_NAMES['contentstoreui'] = 'sap.smbaas.ui.ssbcontentstore'
 
 FOLDER_TO_COPY['designtime'] = "\\src\\main\\webapp"
 FOLDER_TO_COPY['runtime'] = "\\webapp"
@@ -54,6 +56,7 @@ FOLDER_TO_COPY['javacf'] = "\\java\\src\\main"
 FOLDER_TO_COPY['contentstorecore'] = "\\sap-smartbusiness-content-store-core\\src\\main"
 FOLDER_TO_COPY['contentstoreclassic'] = "\\sap-smartbusiness-content-store-hcp-classic\\src\\main"
 FOLDER_TO_COPY['contentstorecf'] = "\\src\\main"
+FOLDER_TO_COPY['contentstoreui'] = '\\src\\main\\webapp'
 
 def run_command(command):
     print("Executing command : %s" % (command))
