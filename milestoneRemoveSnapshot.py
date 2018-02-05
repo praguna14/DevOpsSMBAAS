@@ -24,12 +24,12 @@ def change_parent_pom(filename):
     ElementTree.register_namespace('',"http://maven.apache.org/POM/4.0.0")
     TREE = ElementTree.parse(filename)
     ROOT = TREE.getroot()
-    VERSION = ROOT.findall('*')[3]
+    VERSION = ROOT.find("{http://maven.apache.org/POM/4.0.0}version")
     if "SNAPSHOT" in VERSION.text:
         VERSION.text = VERSION.text.split('-')[0]
     else:
         return -1
-    TREE.write('pom.xml')
+    TREE.write(filename)
     return 1
 
 def change_nonparent_pom(filename):
@@ -37,12 +37,12 @@ def change_nonparent_pom(filename):
     ElementTree.register_namespace('',"http://maven.apache.org/POM/4.0.0")
     TREE = ElementTree.parse(filename)
     ROOT = TREE.getroot()
-    VERSION = ROOT.findall('*')[1].findall('*')[3]
+    VERSION = ROOT.find("{http://maven.apache.org/POM/4.0.0}parent").find("{http://maven.apache.org/POM/4.0.0}version")
     if "SNAPSHOT" in VERSION.text:
         VERSION.text = VERSION.text.split('-')[0]
     else:
         return -1
-    TREE.write('pom.xml')
+    TREE.write(filename)
     return 1
 
 def run_command(command):
@@ -66,14 +66,14 @@ def main(USERID):
         projects = json.load(f)
 
     #creating a separate directory.
-        os.mkdir(TEMP_FOLDER_NAME)
+        # os.mkdir(TEMP_FOLDER_NAME)
         os.chdir(TEMP_FOLDER_NAME)
 
     #MAIN
     for project in projects:
         #cloning master branch
         CLONECOMMAND = "git clone -b master ssh://"+USERID+"@git.wdf.sap.corp:29418"+project["git"]
-        run_command(CLONECOMMAND)
+        # run_command(CLONECOMMAND)
         os.chdir(project["projectfolder"])
 
         #copying commit msg hook file for commit to be possible
@@ -86,12 +86,12 @@ def main(USERID):
         else :
             #changing parent folder pom
             if change_parent_pom(project["parentfolder"]+"\\pom.xml") == -1:
-                print("********* ERROR *************\nProject %s failed. POM for folder %s did not contain snapshot." % (project['name'], project['parentfolder']))
+                print("********* ERROR *************\nProject %s failed. POM for folder %s did not contain snapshot." % (project['name'], project['projectbasefolder']))
                 continue
-            
+            os.chdir(DIR_PATH + "\\" + TEMP_FOLDER_NAME + "\\"+ project["projectfolder"])
             #changing for all subfolder poms
             for subproject in project["subprojects"]:
-                if change_parent_pom(project["parentfolder"]+"\\pom.xml") == -1:
+                if change_nonparent_pom(subproject["folder"]+"\\pom.xml") == -1:
                     print("********* ERROR *************\nProject %s failed. POM for folder %s did not contain snapshot." % (project['name'], subproject['folder']))
                     continue
 
@@ -99,7 +99,7 @@ def main(USERID):
         run_command("git add .")
         run_command("git commit -m 'MilestoneRelease "+project['name']+"'")
         pushcommand = "git push ssh://"+USERID+"@"+HONENAME+":"+PORT+project["git"] + " HEAD:refs/for/master%"+formReviewerString()
-        # run_command(pushcommand)
+        run_command(pushcommand)
         os.chdir(DIR_PATH + "\\" + TEMP_FOLDER_NAME)
 
 if __name__ == '__main__':

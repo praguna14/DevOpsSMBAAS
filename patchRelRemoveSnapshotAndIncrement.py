@@ -24,7 +24,7 @@ def change_parent_pom(filename):
     ElementTree.register_namespace('',"http://maven.apache.org/POM/4.0.0")
     TREE = ElementTree.parse(filename)
     ROOT = TREE.getroot()
-    VERSION = ROOT.findall('*')[3]
+    VERSION = ROOT.find("{http://maven.apache.org/POM/4.0.0}version")
     if "SNAPSHOT" in VERSION.text:
         VERSION.text = VERSION.text.split('-')[0]
     else:
@@ -35,7 +35,7 @@ def change_parent_pom(filename):
         VERSION.text = '.'.join(temp)
     else:
         return -1
-    TREE.write('pom.xml')
+    TREE.write(filename)
     return 1
 
 def change_nonparent_pom(filename):
@@ -43,7 +43,7 @@ def change_nonparent_pom(filename):
     ElementTree.register_namespace('',"http://maven.apache.org/POM/4.0.0")
     TREE = ElementTree.parse(filename)
     ROOT = TREE.getroot()
-    VERSION = ROOT.findall('*')[1].findall('*')[3]
+    VERSION = ROOT.find("{http://maven.apache.org/POM/4.0.0}parent").find("{http://maven.apache.org/POM/4.0.0}version")
     if "SNAPSHOT" in VERSION.text:
         VERSION.text = VERSION.text.split('-')[0]
     else:
@@ -54,7 +54,7 @@ def change_nonparent_pom(filename):
         VERSION.text = '.'.join(temp)
     else:
         return -1
-    TREE.write('pom.xml')
+    TREE.write(filename)
     return 1
 
 def run_command(command):
@@ -103,7 +103,7 @@ def main(USERID, RELBRANCH):
             
             #changing for all subfolder poms
             for subproject in project["subprojects"]:
-                if change_parent_pom(project["parentfolder"]+"\\pom.xml") == -1:
+                if change_nonparent_pom(subproject["folder"]+"\\pom.xml") == -1:
                     print("********* ERROR *************\nProject %s failed. POM for folder %s did not contain version." % (project['name'], subproject['folder']))
                     continue
 

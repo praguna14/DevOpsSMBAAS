@@ -39,6 +39,13 @@
     {
         "name": "javacf",
         "git": "/sap.smartbusiness.service.cf",
-        "projectfolder": "sap.smartbusiness.service.cf"
+        "projectfolder": "sap.smartbusiness.service.cf",
+        "parentfolder": ".",
+        "subprojects": [
+            {
+                "folder": "java"
+            }
+        ],
+        "hasparent": "True"
     }
 ]

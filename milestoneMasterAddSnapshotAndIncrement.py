@@ -16,7 +16,7 @@ PORT = '29418'
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
-REVIEWERS = ['prem.roshan.madhusudhan.nair@sap.com','ananya.mallik@sap.com','girish.sainath@sap.com','sarath.gopal@sap.com','shwetha.kalyanathaya.shashidhara@sap.com']
+REVIEWERS = ['prem.roshan.madhusudhan.nair@sap.com','ananya.mallik@sap.com','lucky.jindal@sap.com']
 
 #UTILITY FUNCTIONS
 def change_parent_pom(filename):
@@ -24,7 +24,7 @@ def change_parent_pom(filename):
     ElementTree.register_namespace('',"http://maven.apache.org/POM/4.0.0")
     TREE = ElementTree.parse(filename)
     ROOT = TREE.getroot()
-    VERSION = ROOT.findall('*')[3]
+    VERSION = ROOT.find("{http://maven.apache.org/POM/4.0.0}version")
     if len(VERSION.text) != 0:
         temp = VERSION.text.split('.')
         temp[1] = str(int(temp[1])+1)
@@ -32,7 +32,7 @@ def change_parent_pom(filename):
     else:
         return -1
     VERSION.text = VERSION.text + "-SNAPSHOT"
-    TREE.write('pom.xml')
+    TREE.write(filename)
     return 1
 
 def change_nonparent_pom(filename):
@@ -40,14 +40,15 @@ def change_nonparent_pom(filename):
     ElementTree.register_namespace('',"http://maven.apache.org/POM/4.0.0")
     TREE = ElementTree.parse(filename)
     ROOT = TREE.getroot()
-    VERSION = ROOT.findall('*')[1].findall('*')[3]
+    VERSION = ROOT.find("{http://maven.apache.org/POM/4.0.0}parent").find("{http://maven.apache.org/POM/4.0.0}version")
     if len(VERSION.text) != 0:
         temp = VERSION.text.split('.')
         temp[1] = str(int(temp[1])+1)
         VERSION.text = '.'.join(temp)
     else:
         return -1
-    TREE.write('pom.xml')
+    VERSION.text = VERSION.text + "-SNAPSHOT"
+    TREE.write(filename)
     return 1
 
 def run_command(command):
@@ -96,7 +97,7 @@ def main(USERID):
             
             #changing for all subfolder poms
             for subproject in project["subprojects"]:
-                if change_parent_pom(project["parentfolder"]+"\\pom.xml") == -1:
+                if change_nonparent_pom(subproject["folder"]+"\\pom.xml") == -1:
                     print("********* ERROR *************\nProject %s failed. POM for folder %s did not contain version." % (project['name'], subproject['folder']))
                     continue
 
@@ -104,7 +105,7 @@ def main(USERID):
         run_command("git add .")
         run_command("git commit -m 'MilestoneRelease "+project['name']+"'")
         pushcommand = "git push ssh://"+USERID+"@"+HONENAME+":"+PORT+project["git"] + " HEAD:refs/for/master%"+formReviewerString()
-        # run_command(pushcommand)
+        run_command(pushcommand)
         os.chdir(DIR_PATH + "\\" + TEMP_FOLDER_NAME)
 
 if __name__ == '__main__':
